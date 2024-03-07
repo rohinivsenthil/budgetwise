@@ -1,54 +1,50 @@
-# CLOUD-SEED
-# _replace with your Project Name/Concept_ :  _____ _replace with your particular project name/type_ _____
-# Modify this document to expand any and all sections that are applicable for a better understanding from your users/testers/collaborators (remove this comment and other instructions areas for your FINAL release)
+# BudgetWise: Expense and Budget Manager
+
 ## Concept summary
-An online cloud system to _do X, Y, Z_ built in _Java 8=>11_ and ___ _replace with other platform requirements_ ___
+ Our project involves the development of an Expense Tracking and Budgeting Application aimed at enhancing users' financial management practices. Through this platform, users can efficiently manage their expenses, create personalized budgets, and optimize their spending habits. The application will offer intuitive data visualization tools for tracking spending patterns, with real-time alerts that will notify users of budget breaches, ensuring fiscal discipline.
   
 ## Team
 
-- MEMBER1
-- MEMBER2
-- MEMBER3
-- MEMBER4
-- ...
+- Rohini Senthilkumar
+- Manasi Patil
+- Kush Ahir
+- Uzair Mukadam
+- Shridhar Shinde
 
 ## Prerequisites
 
-- Examples: Java 21.. Node.js 24 or above
--  ~~e.g. AWS CLI
-   https://aws.amazon.com/cli/~~
--  ~~e.g. AWS CDK Toolkit
-  Install by running: `npm install -g aws-cdk`~~
--  e.g. AWS Terraform **(encourage for full credit)**
--  _add any other tech stack requirements_ 
+### Tech Stack
+
+- React
+
+### AWS Resources
+
+- AWS Cognito: User authentication
+- AWS Amplify: Hosting frontend (React) of the application
+- AWS S3: Asset management
+- AWS DynamoDB: Database for storing application data
+- AWS Lambda: Serverless backend of application
+- AWS StepFunction: Error handling and orchestration of Lambda functions 
+- AWS API Gateway: Exposing Lambda functions to frontend
+- AWS QuickSight: Create visualization analytics to embed in application
+- AWS Textract: OCR to submit expenses via reciept uploads
+- AWS SNS: Alert users via SMS on budget exceeds
+- AWS SES: Provide users via email for monthly spending reports
 
 ## How to deploy it 
-** (this will be key to your grading, your success here will depend on how close to "turn-key" your system really is and how simple and few instructions are required.
-That said, if you deviate make sure EACH and EVERY step is bullet proof <== _remove this once you are SURE your project can be duplicate_)
-
-1. steps to will vary - be sure to indentify in full your mechanism(s)
-2. _add any other steps required or examples of how to use/run_
+TBA
 
 ## Known bugs and disclaimers
-(It may be the case that your implementation is not perfect.)
-
-Document any known bug or nuisance.
-If any shortcomings, make clear what these are and where they are located.
+TBA
 
 ## Data sources and other dependencies
-_include any details pertinent to data sources required for execution_
-- Data representing _X_ has been collected for _Y_ days and is stored at _Z_ 
-- _ add any other considetations, be clear about any access/credentials or external dependencies_ 
+TBA
 
 ## How to test/run/access/use it
-_decribe any pre-requisites_ and indicate specific steps:
-1. Prepare... verify that ... is in place
-2. Open in your browser `http://_deploylocation_:8080/`
-3.  _add any other steps required or examples of how to use/run_
-4.  ...
+TBA
 
 ## Additional Info
-_provide reference to any other artifacts or document that may complement the understanding of your project (e.g. Google drive, Design Doc, etc.)_ 
+TBA
 
 ## License
 
