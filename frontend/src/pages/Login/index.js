@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Button, Tab, Tabs, TextField } from "@mui/material";
 import { LOGIN_IMAGE_URL } from '../../constants'
 import "./login.css"
 
 export default function Login() {
+    const navigate = useNavigate();
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
     const handleTabChange = (e, tabIndex) => {
@@ -14,6 +16,7 @@ export default function Login() {
     const handleLoginOnClick = () => {
         // fill in with login API
         // navigate to dashboard screen
+        navigate('/dashboard');
     }
 
     return (
@@ -34,7 +37,7 @@ export default function Login() {
                     <div className="tab">
                         <TextField label="Email" variant="outlined" size="small" fullWidth margin="normal" required/>
                         <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required/>
-                        <Button style={{backgroundColor: "#465098", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth onClick={handleLoginOnClick}>LOGIN</Button>
+                        <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth onClick={handleLoginOnClick}>LOGIN</Button>
                         <div className="tabFooter">Don't have an account? Register</div>
                     </div>
                 )}
@@ -45,7 +48,7 @@ export default function Login() {
                     <TextField label="Email" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Phone" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required/>
-                    <Button style={{backgroundColor: "#465098", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth>REGISTER</Button>
+                    <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth>REGISTER</Button>
                     <div className="tabFooter">Already have have an account? Login</div>
                 </div>
                 )}
