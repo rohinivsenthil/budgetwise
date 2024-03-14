@@ -1,0 +1,35 @@
+.dashTabContainer {
+    width: 100%; 
+    height: 100vh; 
+    padding-top: 6rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.listContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem;
+    margin-top: 0;
+}
+
+.list1 {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid lightgray;
+    margin-right: 1rem;
+}
+
+.chart1 {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid lightgray;
+}
+
+.chart2 {
+    margin: 1rem;
+    flex: 1;
+    border: 1px solid lightgray;
+    padding: 5px;
+}

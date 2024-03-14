@@ -19,6 +19,12 @@ export default function Login() {
         navigate('/dashboard');
     }
 
+    const handleRegisterOnClick = () => {
+        // fill in with register API
+        // navigate to dashboard screen
+        navigate('/dashboard');
+    }
+
     return (
         <div className="container">
             <div className="subContainer"> 
@@ -48,7 +54,7 @@ export default function Login() {
                     <TextField label="Email" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Phone" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required/>
-                    <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth>REGISTER</Button>
+                    <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth onClick={handleRegisterOnClick}>REGISTER</Button>
                     <div className="tabFooter">Already have have an account? Login</div>
                 </div>
                 )}
