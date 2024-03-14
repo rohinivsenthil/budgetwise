@@ -8,8 +8,9 @@ import DrawerList from '../../components/DrawerList'
 import DashboardTab from '../../components/DashboardTab'
 import Button from '@mui/material/Button';
 import Receipt from '@mui/icons-material/Receipt';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import { DRAWER_WIDTH } from '../../constants'
-import './dashboard.css'
+import "./index.css"
 
 export default function Dashboard() {
     return (
@@ -17,7 +18,10 @@ export default function Dashboard() {
             <AppBar position="fixed" sx={{ width: `calc(100% - ${DRAWER_WIDTH}px)`, ml: `${DRAWER_WIDTH}px` }}>
                 <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
                     <div className="toolBarTitle">Your BudgetWise Dashboard</div>
-                    <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'small', width: '20%', fontWeight: 'bold'}} startIcon={<Receipt/>}>Add Expense</Button>
+                    <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
+                        <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>}>Create Budget</Button>
+                        <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold'}} startIcon={<Receipt/>}>Add Expense</Button>
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer sx={{ width: DRAWER_WIDTH, flexShrink: 0, display: 'block', '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box'}}} variant="permanent" anchor="left">
