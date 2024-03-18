@@ -22,6 +22,25 @@ def createExpense(name, category, value):
     except Exception as e:
         print("Error:", e)
         return generateResponse(400, e.response["Error"]["Message"])
+    
+def viewAllExpense():
+    try:
+        response = table.scan()
+        items = response.get('Items', [])
+        # items = response['Items']
+        results=[]
+        for item in items:
+            results.append({
+                "id":item["id"],
+                "name":item["name"],
+                "category":item["category"],
+                "value":float(item["value"])
+            })
+        body = {"Expenses": results}
+        return generateResponse(200, body)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, e.response["Error"]["Message"])
 
 def deleteExpense(id):
     try:
@@ -98,6 +117,8 @@ def lambda_handler(event, context):
             category = body.get("category")
             value = body.get("value")
             response = createExpense(name, category, value)
+        elif path == "/expenses" and method == "GET":
+            response = viewAllExpense()
 
     except Exception as e:
         print("Error:", e)
