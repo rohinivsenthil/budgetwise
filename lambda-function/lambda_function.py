@@ -41,6 +41,26 @@ def viewAllExpense():
     except Exception as e:
         print("Error:", e)
         return generateResponse(400, e.response["Error"]["Message"])
+    
+def viewSingleExpense(id):
+    try:
+        response = table.get_item(Key={"id": id})
+        expense_item = response.get('Item')
+        result=None
+        if expense_item:
+            result = {
+                "id":expense_item["id"],
+                "name": expense_item["name"],
+                "category" : expense_item["category"],
+                "value" : float(expense_item["value"])
+            }
+            body = {"Expense": result}
+            return generateResponse(200, body)
+        else:
+            return generateResponse(404, "Expense not found")
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, e.response["Error"]["Message"])
 
 def deleteExpense(id):
     try:
@@ -119,6 +139,9 @@ def lambda_handler(event, context):
             response = createExpense(name, category, value)
         elif path == "/expenses" and method == "GET":
             response = viewAllExpense()
+        elif path_resource == "/expenses/{id}" and method == "GET":
+            id = event.get("pathParameters", {}).get("id")
+            response = viewSingleExpense(id)
 
     except Exception as e:
         print("Error:", e)
