@@ -7,6 +7,8 @@ import Divider from '@mui/material/Divider';
 import DrawerList from '../../components/DrawerList'
 import DashboardTab from '../../components/DashboardTab'
 import CreateExpenseModal from '../../components/CreateExpenseModal';
+import DeleteExpenseModal from '../../components/DeleteExpenseModal';
+import UpdateExpenseModal from '../../components/UpdateExpenseModal';
 import Button from '@mui/material/Button';
 import Receipt from '@mui/icons-material/Receipt';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -14,8 +16,17 @@ import { DRAWER_WIDTH } from '../../constants'
 import "./index.css"
 
 export default function Dashboard() {
+    const [focusItem, setFocusItem] = useState({date: '', name: '', category: '', amount: ''})
+
     const [createExpenseModal, setCreateExpenseModal] = useState(false);
     const createExpenseToggle = () => setCreateExpenseModal(!createExpenseModal);
+
+    const [deleteExpenseModal, setDeleteExpenseModal] = useState(false);
+    const deleteExpenseToggle = () => setDeleteExpenseModal(!deleteExpenseModal);
+
+    const [updateExpenseModal, setUpdateExpenseModal] = useState(false);
+    const updateExpenseToggle = () => setUpdateExpenseModal(!updateExpenseModal);
+
     return (
             <Box sx={{ display: 'flex' }}>
                 <AppBar position="fixed" sx={{ width: `calc(100% - ${DRAWER_WIDTH}px)`, ml: `${DRAWER_WIDTH}px` }}>
@@ -35,7 +46,9 @@ export default function Dashboard() {
                 {/* Add toggle on tab change */}
                 <div className="mainContainer">
                     <CreateExpenseModal modal={createExpenseModal} toggle={createExpenseToggle}/>
-                    <DashboardTab/>
+                    <DeleteExpenseModal modal={deleteExpenseModal} toggle={deleteExpenseToggle}/>
+                    <UpdateExpenseModal modal={updateExpenseModal} toggle={updateExpenseToggle} focusItem={focusItem}/>
+                    <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem}/>
                 </div>
             </Box>
     );

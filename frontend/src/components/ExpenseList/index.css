@@ -39,6 +39,17 @@
     font-size: small;
 }
 
+.tableActions {
+    flex: 1;
+    text-align: center;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    border-bottom: 1px solid lightgray;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+}
+
 .tableDataCategory-Groceries {
     background-color: #D0F0C0;
     padding: 2px;    

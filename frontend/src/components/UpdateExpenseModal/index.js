@@ -9,9 +9,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import {categories} from '../../constants'
 
-export default function CreateExpenseModal(props) {
+export default function UpdateExpenseModal(props) {
 
-  const { modal, toggle } = props;
+  const { modal, toggle, focusItem } = props;
 
   const handleSubmit = async () => {
     toggle();
@@ -25,7 +25,7 @@ export default function CreateExpenseModal(props) {
       aria-describedby="alert-dialog-description"
     >
         <DialogTitle id="alert-dialog-title" fontSize="medium">
-            {"Enter your expense details"}
+            {"Update your expense details"}
         </DialogTitle>
         <DialogContent>
             <TextField
@@ -33,6 +33,7 @@ export default function CreateExpenseModal(props) {
                 sx={{ m: 1, width: '40%' }}
                 variant="standard"
                 helperText="Expense Name"
+                defaultValue={focusItem.name}
             />
             <TextField
                 id="standard-select-category"
@@ -40,6 +41,7 @@ export default function CreateExpenseModal(props) {
                 sx={{ m: 1, width: '40%' }}
                 variant='standard'
                 helperText="Expense Category"
+                defaultValue={focusItem.category !== undefined ? focusItem.category : ''}
                 >
                 {categories.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -55,11 +57,12 @@ export default function CreateExpenseModal(props) {
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
                 variant="standard"
+                defaultValue={focusItem.amount}
             />
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>
-            <Button onClick={handleSubmit} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}> Add Expense</Button>
+            <Button onClick={handleSubmit} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}>Update</Button>
       </DialogActions>
     </Dialog>
   );
