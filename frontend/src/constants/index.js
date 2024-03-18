@@ -1,6 +1,25 @@
 export const LOGIN_IMAGE_URL = "https://cdni.iconscout.com/illustration/premium/thumb/budget-management-4836166-4040951.png";
 export const DRAWER_WIDTH = 240;
 
+export const categories = [
+    {
+      value: 'Food',
+      label: 'Food',
+    },
+    {
+      value: 'Groceries',
+      label: 'Groceries',
+    },
+    {
+      value: 'Utilities',
+      label: 'Utilities',
+    },
+    {
+      value: 'Other',
+      label: 'Other',
+    },
+];
+
 export const data = [
     {
         'expense_id': 1,
