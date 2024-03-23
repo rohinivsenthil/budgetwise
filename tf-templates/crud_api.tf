@@ -29,10 +29,16 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+resource "aws_iam_policy_attachment" "lambda_execution_policy" {
+  name       = "lambda_execution_policy"
+  policy_arn = "arn:aws:iam::aws:policy/servicerole/AWSLambdaBasicExecutionRole"
+  roles      = aws_iam_role.lambda_role.name
+}
+
 resource "aws_iam_policy_attachment" "lambda_dynamodb_policy" {
   name       = "lambda_dynamodb_policy"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-  roles      = [aws_iam_role.lambda_role.name]
+  roles      = aws_iam_role.lambda_role.name
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -41,7 +47,7 @@ resource "aws_lambda_function" "lambda_function" {
   role = aws_iam_role.lambda_role.arn
   filename = "lambda_function.zip"
   source_code_hash = filebase64sha256("lambda_function.zip")
-  handler = "index.lambda_handler"
+  handler = "lambda_function.lambda_handler"
   runtime = "python3.10"
   timeout = 10
 }
