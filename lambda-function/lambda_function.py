@@ -1,4 +1,4 @@
-import boto3
+import boto3,uuid
 import simplejson as json
 from boto3.dynamodb.conditions import Key
 
@@ -8,6 +8,7 @@ dynamodb = boto3.resource("dynamodb", region_name=region)
 
 def createExpense(table, data):
     try:
+        data["expense_id"] = str(uuid.uuid4())
         response = table.put_item(Item=data)
         return generateResponse(200, response)
     except Exception as e:
@@ -86,7 +87,7 @@ def lambda_handler(event, context):
                     # do get all expenses
                     response = viewAllExpenses(expenses_table)
             else:
-                expense_id = int(path.split("/")[-1])
+                expense_id = path.split("/")[-1]
                 if method == "GET":
                     # do get expense
                     response = viewExpense(expenses_table, expense_id)
