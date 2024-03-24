@@ -16,16 +16,16 @@ provider "aws" {
 }
 
 # user table
-# add expense_table and budget_limit with user entry
+# add expenses_table and budget with user entry
 resource "aws_dynamodb_table" "user-table" {
   name           = "Users"
   billing_mode   = "PROVISIONED"
   read_capacity  = 10
   write_capacity = 10
-  hash_key       = "UserID"
+  hash_key       = "user_id"
 
   attribute {
-    name = "UserID"
+    name = "user_id"
     type = "S"
   }
 }
@@ -37,16 +37,16 @@ resource "aws_dynamodb_table" "category-table" {
   billing_mode   = "PROVISIONED"
   read_capacity  = 10
   write_capacity = 10
-  hash_key       = "CategoryID"
-  range_key      = "Name"
+  hash_key       = "category_id"
+  range_key      = "name"
 
   attribute {
-    name = "CategoryID"
+    name = "category_id"
     type = "N"
   }
 
   attribute {
-    name = "Name"
+    name = "name"
     type = "S"
   }
 }
