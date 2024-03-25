@@ -86,6 +86,23 @@ resource "aws_api_gateway_method" "patch_expense" {
   authorization = "NONE"
 }
 
+# creating the api method for a resource
+# expense create
+resource "aws_api_gateway_method" "create_expense" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+# creating the api method for viewing all expenses
+resource "aws_api_gateway_method" "view_all_expenses" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
 # integrating the lambda function with the api method expense delete
 # will be common for all, just change the resource_id and http_method
 resource "aws_api_gateway_integration" "lambda_integration_expense_delete" {
@@ -103,6 +120,26 @@ resource "aws_api_gateway_integration" "lambda_integration_expense_update" {
   rest_api_id             = aws_api_gateway_rest_api.rest_api.id
   resource_id             = aws_api_gateway_resource.expenses.id
   http_method             = aws_api_gateway_method.patch_expense.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# integrating the lambda function with the api method for expense create
+resource "aws_api_gateway_integration" "lambda_integration_expense_create" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.expenses.id
+  http_method             = aws_api_gateway_method.create_expense.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# integrating the lambda function with the api method for viewing all expenses
+resource "aws_api_gateway_integration" "lambda_integration_view_all_expenses" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.expenses.id
+  http_method             = aws_api_gateway_method.view_all_expenses.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda_function.invoke_arn
