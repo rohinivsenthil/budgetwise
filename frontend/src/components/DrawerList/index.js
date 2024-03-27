@@ -7,19 +7,22 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 
-export default function DrawerList() {
+export default function DrawerList(props) {
+    const { setTab } = props;
     return (
         <List>
-            {['Dashboard', 'Profile'].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                <ListItemButton>
-                    <ListItemIcon>
-                    {index % 2 === 0 ? <DashboardIcon style={{color: '#465098'}}/> : <PersonIcon style={{color: '#465098'}}/>}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
+            <ListItem disablePadding>
+                <ListItemButton onClick={() => setTab(0)}>
+                    <ListItemIcon><DashboardIcon style={{color: '#465098'}}/></ListItemIcon>
+                    <ListItemText primary={"Dashboard"} />
                 </ListItemButton>
-                </ListItem>
-            ))}
+            </ListItem>
+            <ListItem disablePadding>
+                <ListItemButton onClick={() => setTab(1)}>
+                    <ListItemIcon><PersonIcon style={{color: '#465098'}}/></ListItemIcon>
+                    <ListItemText primary={"Profile"} />
+                </ListItemButton>
+            </ListItem>
         </List>
     );
 }

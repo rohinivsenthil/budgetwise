@@ -1,20 +1,5 @@
 # initial base structure
 
-terraform {
-  required_providers {
-    aws = {
-        source = "hashicorp/aws"
-        version = "~> 4.16"
-    }
-  }
-
-  required_version = ">= 1.2.0"
-}
-
-provider "aws" {
-  region = "us-east-2"
-}
-
 resource "aws_iam_role" "lambda_role" {
   name = "crud_lambda_role"
   assume_role_policy = jsonencode({
@@ -29,16 +14,41 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
-resource "aws_iam_policy_attachment" "lambda_execution_policy" {
-  name       = "lambda_execution_policy"
-  policy_arn = "arn:aws:iam::aws:policy/servicerole/AWSLambdaBasicExecutionRole"
-  roles      = aws_iam_role.lambda_role.name
+resource "aws_iam_policy" "lambda_execution_policy" {
+  name        = "lambda_execution_policy"
+  description = "Policy for Lambda function execution"
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = "lambda:InvokeFunction",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_execution_policy_attachment" {
+  name       = "lambda_execution_policy_attachment"
+  policy_arn = aws_iam_policy.lambda_execution_policy.arn
+  roles      = [aws_iam_role.lambda_role.name]
 }
 
 resource "aws_iam_policy_attachment" "lambda_dynamodb_policy" {
   name       = "lambda_dynamodb_policy"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-  roles      = aws_iam_role.lambda_role.name
+  roles      = aws_iam_role.lambda_role.*.name
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -58,6 +68,17 @@ resource "aws_api_gateway_rest_api" "rest_api" {
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+}
+
+resource "aws_lambda_permission" "apigw" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.arn
+  principal     = "apigateway.amazonaws.com"
+
+  # The /*/* portion grants access from any method on any resource
+  # within the API Gateway "REST API".
+  source_arn = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*"
 }
 
 # creating the api gateway resource
