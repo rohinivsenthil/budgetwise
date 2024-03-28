@@ -7,6 +7,7 @@ from decimal import Decimal
 region = "us-east-2"
 
 dynamodb = boto3.resource("dynamodb", region_name=region)
+textract = boto3.client('textract')
 
 ###################
 # Expenses APIs
@@ -133,9 +134,35 @@ def generateResponse(statusCode, body):
 
     return {
         "statusCode": statusCode,
-        "headers": {"Content-Type": "application/json"},
+        "headers": {"Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'},
         "body": json.dumps(body, default=convert_decimal),
     }
+
+###################
+# Receipts APIs
+###################
+
+def analyze_receipts(table, receipt_file):
+    try:
+        # Call Amazon Textract to analyze the receipt file
+        response = textract.analyze_document(Document={'Bytes': receipt_file.read()}, FeatureTypes=["FORMS"])
+        
+        # Extracting amount from Textract response
+        amount = None
+        for item in response['Blocks']:
+            if item['BlockType'] == 'LINE' and 'Amount' in item['Text']:
+                amount_text = item['Text'].replace('$', '').replace(',', '').strip()
+                amount = Decimal(amount_text)
+                break
+        
+        if amount is not None:
+            return generateResponse(200, {"amount": amount})
+        else:
+            return generateResponse(404, "Amount not found in receipt")
+            
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
 
 ###################
 # API Handler
@@ -174,6 +201,9 @@ def lambda_handler(event, context):
                     response = updateBudget(budgets_table, json.loads(event["body"]))
                 elif method == "DELETE":
                     response = deleteBudget(budgets_table, json.loads(event["body"]))
+        elif path.startswith("/receipts"):
+            if method == "POST":
+                response = analyze_receipts(expenses_table, event['body'])
         
     except Exception as e:
         print("Error:", e)

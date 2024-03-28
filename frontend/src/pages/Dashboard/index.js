@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
@@ -30,6 +31,22 @@ export default function Dashboard() {
     const [updateExpenseModal, setUpdateExpenseModal] = useState(false);
     const updateExpenseToggle = () => setUpdateExpenseModal(!updateExpenseModal);
 
+    const [expenses, setExpenses] = useState([]);
+    const apiUrl = process.env.REACT_APP_API_URL;
+
+    useEffect(() => {
+        const fetchExpenses = async () => {
+          try {
+            const response = await axios.get(`${apiUrl}/expenses`);
+            setExpenses(response.data.Items);
+          } catch (error) {
+            console.error('Error fetching expenses:', error);
+          }
+        };
+        fetchExpenses();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+    
     return (
             <Box sx={{ display: 'flex' }}>
                 <AppBar position="fixed" sx={{ width: `calc(100% - ${DRAWER_WIDTH}px)`, ml: `${DRAWER_WIDTH}px` }}>
@@ -60,7 +77,7 @@ export default function Dashboard() {
                     <CreateExpenseModal modal={createExpenseModal} toggle={createExpenseToggle}/>
                     <DeleteExpenseModal modal={deleteExpenseModal} toggle={deleteExpenseToggle}/>
                     <UpdateExpenseModal modal={updateExpenseModal} toggle={updateExpenseToggle} focusItem={focusItem}/>
-                    <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem}/>
+                    <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem} expenses={expenses}/>
                 </div>
                 :
                 <div className="mainContainer">

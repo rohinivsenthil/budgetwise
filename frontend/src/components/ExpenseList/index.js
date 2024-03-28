@@ -1,12 +1,11 @@
 import React from "react";
-import {data} from '../../constants'
 import './index.css'
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function ExpenseList(props) {
-    const {deleteExpenseToggle, updateExpenseToggle, setFocusItem} = props;
+    const {deleteExpenseToggle, updateExpenseToggle, setFocusItem, expenses} = props;
     const onUpdate = (item) => {
         setFocusItem(item);
         updateExpenseToggle();
@@ -21,7 +20,7 @@ export default function ExpenseList(props) {
                 <div className="tableHeadingContent">Amount</div>
                 <div className="tableHeadingContent">Actions</div>
             </div>
-            {data.map((item) => (
+            {expenses.map((item) => (
                 <div className="tableData">
                     <div className="tableDataContent">{item.date}</div>
                     <div className="tableDataContent">{item.name}</div>

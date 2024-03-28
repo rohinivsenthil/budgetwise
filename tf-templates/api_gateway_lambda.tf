@@ -1,5 +1,3 @@
-# initial base structure
-
 resource "aws_iam_role" "lambda_role" {
   name = "crud_lambda_role"
   assume_role_policy = jsonencode({
@@ -33,6 +31,11 @@ resource "aws_iam_policy" "lambda_execution_policy" {
       {
         Effect   = "Allow",
         Action   = "lambda:InvokeFunction",
+        Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = "textract:*",
         Resource = "*"
       }
     ]
@@ -75,6 +78,18 @@ resource "aws_lambda_permission" "apigw" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function.arn
   principal     = "apigateway.amazonaws.com"
+
+  # The /*/* portion grants access from any method on any resource
+  # within the API Gateway "REST API".
+  source_arn = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*"
+}
+
+# Lambda permission to invoke Textract
+resource "aws_lambda_permission" "textract_permission" {
+  statement_id  = "AllowLambdaInvokeTextract"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.arn
+  principal     = "textract.amazonaws.com"
 
   # The /*/* portion grants access from any method on any resource
   # within the API Gateway "REST API".
@@ -244,4 +259,73 @@ resource "aws_api_gateway_integration" "lambda_integration_view_all_budgets" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# creating the api gateway resource for receipts
+# /receipts
+resource "aws_api_gateway_resource" "receipts" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
+  path_part   = "receipts"
+}
+
+# creating the api method for a resource to analyze a receipt
+resource "aws_api_gateway_method" "analyze_receipt" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.receipts.id
+  http_method   = "POST"
+  authorization = "NONE"
+  request_models = {
+    "multipart/form-data" = aws_api_gateway_model.multipartFormData.name
+  }
+}
+
+# integrating the lambda function with the api method for analyzing a receipt
+resource "aws_api_gateway_integration" "lambda_integration_analyze_receipt" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.receipts.id
+  http_method             = aws_api_gateway_method.analyze_receipt.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# Request model for multipart/form-data
+resource "aws_api_gateway_model" "multipartFormData" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  name          = "MultipartFormData"
+  content_type  = "multipart/form-data"
+  schema        = jsonencode({
+    "type": "object",
+    "properties": {
+      "file": { "type": "string", "format": "binary" }
+    }
+  })
+}
+
+# Deploying API Gateway Deployment
+resource "aws_api_gateway_deployment" "deployment" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  stage_name  = "dev"
+  depends_on = [
+    aws_api_gateway_method.delete_expense,
+    aws_api_gateway_integration.lambda_integration_expense_delete,
+    aws_api_gateway_method.patch_expense,
+    aws_api_gateway_integration.lambda_integration_expense_update,
+    aws_api_gateway_method.create_expense,
+    aws_api_gateway_integration.lambda_integration_expense_create,
+    aws_api_gateway_method.view_all_expenses,
+    aws_api_gateway_integration.lambda_integration_view_all_expenses,
+    aws_api_gateway_method.delete_budget,
+    aws_api_gateway_integration.lambda_integration_budget_delete,
+    aws_api_gateway_method.patch_budget,
+    aws_api_gateway_integration.lambda_integration_budget_update,
+    aws_api_gateway_method.create_budget,
+    aws_api_gateway_integration.lambda_integration_budget_create,
+    aws_api_gateway_method.view_all_budgets,
+    aws_api_gateway_integration.lambda_integration_view_all_budgets,
+    aws_api_gateway_method.analyze_receipt,
+    aws_api_gateway_integration.lambda_integration_analyze_receipt,
+    # Add dependencies for other resources as needed
+  ]
 }
