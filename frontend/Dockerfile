@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:14-alpine
+FROM node:latest AS build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -16,8 +16,5 @@ COPY . .
 # Build the React app for production
 RUN npm run build
 
-# Expose port 80 to the outside world
-EXPOSE 80
-
-# Command to run the application
-CMD ["npm", "start"]
+FROM nginx:1.13-alpine
+COPY --from=build /app/build /usr/share/nginx/html
