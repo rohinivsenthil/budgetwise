@@ -165,3 +165,83 @@ resource "aws_api_gateway_integration" "lambda_integration_view_all_expenses" {
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda_function.invoke_arn
 }
+
+# creating the api gateway resource for budgets
+# /budgets
+resource "aws_api_gateway_resource" "budgets" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
+  path_part   = "budgets"
+}
+
+# creating the api method for a resource to delete a budget
+resource "aws_api_gateway_method" "delete_budget" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.budgets.id
+  http_method   = "DELETE"
+  authorization = "NONE"
+}
+
+# creating the api method for a resource to update a budget
+resource "aws_api_gateway_method" "patch_budget" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.budgets.id
+  http_method   = "PATCH"
+  authorization = "NONE"
+}
+
+# creating the api method for a resource to create a budget
+resource "aws_api_gateway_method" "create_budget" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.budgets.id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+# creating the api method for viewing all budgets
+resource "aws_api_gateway_method" "view_all_budgets" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.budgets.id
+  http_method   = "GET"
+  authorization = "NONE"
+}
+
+# integrating the lambda function with the api method for deleting a budget
+resource "aws_api_gateway_integration" "lambda_integration_budget_delete" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.budgets.id
+  http_method             = aws_api_gateway_method.delete_budget.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# integrating the lambda function with the api method for updating a budget
+resource "aws_api_gateway_integration" "lambda_integration_budget_update" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.budgets.id
+  http_method             = aws_api_gateway_method.patch_budget.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# integrating the lambda function with the api method for creating a budget
+resource "aws_api_gateway_integration" "lambda_integration_budget_create" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.budgets.id
+  http_method             = aws_api_gateway_method.create_budget.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
+# integrating the lambda function with the api method for viewing all budgets
+resource "aws_api_gateway_integration" "lambda_integration_view_all_budgets" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.budgets.id
+  http_method             = aws_api_gateway_method.view_all_budgets.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}

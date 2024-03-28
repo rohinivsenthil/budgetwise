@@ -8,6 +8,10 @@ region = "us-east-2"
 
 dynamodb = boto3.resource("dynamodb", region_name=region)
 
+###################
+# Expenses APIs
+###################
+
 def createExpense(table, data):
     user_id = "1"  # Default user_id
     try:
@@ -32,7 +36,6 @@ def viewAllExpenses(table):
         print("Error:", e)
         return generateResponse(400, str(e))
 
-        
 def viewExpense(table, expense_id):
     try:
         response = table.query(
@@ -67,6 +70,59 @@ def updateExpense(table, data):
     except Exception as e:
         print("Error:", e)
         return generateResponse(400, str(e))
+    
+###################
+# Budget APIs
+###################
+    
+def createBudget(table, data):
+    user_id = "1"  # Default user_id
+    try:
+        data["budget_id"] = str(uuid.uuid4())
+        data["user_id"] = user_id
+        data["amount"] = Decimal(str(data["amount"]))  # Convert amount to Decimal
+        response = table.put_item(Item=data)
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
+
+def viewAllBudgets(table):
+    user_id = "1"  # Default user_id
+    try:
+        response = table.query(
+            IndexName="user_id-index",
+            KeyConditionExpression=Key("user_id").eq(user_id)
+        )
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
+    
+def deleteBudget(table, data):
+    try:
+        budget_id = data["budget_id"]
+        response = table.delete_item(
+            Key={"budget_id": budget_id}
+        )
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
+    
+def updateBudget(table, data):
+    user_id = "1"  # Default user_id
+    try:
+        # Convert float to Decimal for amount
+        data["amount"] = Decimal(str(data["amount"]))
+        # Add user_id to data
+        data["user_id"] = user_id
+        # Update item
+        response = table.put_item(Item=data)
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
 
 def generateResponse(statusCode, body):
     # Convert Decimal to float if needed
@@ -81,8 +137,13 @@ def generateResponse(statusCode, body):
         "body": json.dumps(body, default=convert_decimal),
     }
 
+###################
+# API Handler
+###################
+
 def lambda_handler(event, context):
     expenses_table = dynamodb.Table("expenses")
+    budgets_table = dynamodb.Table("budgets")
     response = None
 
     try:
@@ -103,6 +164,16 @@ def lambda_handler(event, context):
                 expense_id = path.split("/")[-1]
                 if method == "GET":
                     response = viewExpense(expenses_table, expense_id)
+        elif path.startswith("/budgets"):
+            if path.endswith("/budgets"):
+                if method == "POST":
+                    response = createBudget(budgets_table, json.loads(event["body"]))
+                elif method == "GET":
+                    response = viewAllBudgets(budgets_table)
+                elif method == "PATCH":
+                    response = updateBudget(budgets_table, json.loads(event["body"]))
+                elif method == "DELETE":
+                    response = deleteBudget(budgets_table, json.loads(event["body"]))
         
     except Exception as e:
         print("Error:", e)

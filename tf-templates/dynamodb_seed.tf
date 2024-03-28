@@ -76,3 +76,26 @@ resource "aws_dynamodb_table_item" "expenses_seed" {
     "amount"     : {"N": tostring(each.value.amount)}
   })
 }
+
+locals {
+  budget_categories = {
+    "utilities": 100,
+    "groceries": 100,
+    "food": 100,
+    "other": 200
+  }
+}
+
+resource "aws_dynamodb_table_item" "budgets_seed" {
+  table_name  = aws_dynamodb_table.budgets.name
+  depends_on  = [aws_dynamodb_table.budgets]
+
+  hash_key    = "budget_id"
+
+  item = jsonencode({
+    "budget_id"  : {"S": "1"},
+    "user_id"    : {"S": "1"},
+    "amount"     : {"N": "500"},
+    "categories" : {"S": jsonencode(local.budget_categories)}
+  })
+}
