@@ -17,6 +17,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { DRAWER_WIDTH } from '../../constants'
 import "./index.css"
+import { API_URL } from "../../config";
 
 export default function Dashboard() {
     const [focusItem, setFocusItem] = useState({date: '', name: '', category: '', amount: ''})
@@ -32,12 +33,11 @@ export default function Dashboard() {
     const updateExpenseToggle = () => setUpdateExpenseModal(!updateExpenseModal);
 
     const [expenses, setExpenses] = useState([]);
-    const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const fetchExpenses = async () => {
           try {
-            const response = await axios.get(`${apiUrl}/expenses`);
+            const response = await axios.get(`${API_URL}/expenses`);
             setExpenses(response.data.Items);
           } catch (error) {
             console.error('Error fetching expenses:', error);

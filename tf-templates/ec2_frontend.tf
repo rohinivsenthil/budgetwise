@@ -14,9 +14,11 @@ resource "aws_instance" "budgetwise_instance" {
     sudo service docker start
     
     # Start your Docker container
-    sudo docker run -d -p 80:80 rv8542/budgetwise-frontend
+    sudo docker run -d -p 80:80 -e API_URL="${aws_api_gateway_deployment.deployment.invoke_url}" rv8542/budgetwise-frontend
     EOF
 
+  depends_on = [aws_api_gateway_deployment.deployment]
+  
   tags = {
     Name = "budgetwise-app"
   }

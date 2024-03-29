@@ -18,3 +18,11 @@ RUN npm run build
 
 FROM nginx:1.13-alpine
 COPY --from=build /app/build /usr/share/nginx/html
+
+COPY <<EOF /start.sh
+echo "{\\"API_URL\\": \\"\$API_URL\\"}" > /usr/share/nginx/html/config.json
+echo "Starting..."
+nginx -g 'daemon off;'
+EOF
+
+CMD ["sh", "/start.sh"]
