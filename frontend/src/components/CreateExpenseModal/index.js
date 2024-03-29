@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import {categories} from '../../constants'
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 export default function CreateExpenseModal(props) {
 
@@ -56,6 +57,11 @@ export default function CreateExpenseModal(props) {
                 }}
                 variant="standard"
             />
+            <br/>
+            <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginTop: '1rem'}} startIcon={<FileUploadIcon/>}> 
+              Upload Receipt Instead 
+              <input type="file" hidden style={{width: '100%'}}/>
+            </Button>
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>

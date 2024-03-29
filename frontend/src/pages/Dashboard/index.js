@@ -54,7 +54,7 @@ export default function Dashboard() {
                     <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
                         <div className="toolBarTitle">Your BudgetWise Dashboard</div>
                         <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
-                            <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>}>Create Budget</Button>
+                            <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '40%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>}>Create Budget</Button>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold'}} startIcon={<Receipt/>} onClick={createExpenseToggle}>Add Expense</Button>
                         </div>
                     </Toolbar>

@@ -10,7 +10,7 @@ export default function ProfileTab() {
                 <div className="profileEntry">Name: </div>
                 <div className="profileEntry">Email: </div>
                 <div className="profileEntry">Phone Number: </div>
-                <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>}>Update Profile</Button>
+                <Button style={{backgroundColor: 'white', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginRight: '1rem', marginTop: '5rem'}} startIcon={<BarChartIcon/>}>Update Profile</Button>
             </div>
         </div>
     )

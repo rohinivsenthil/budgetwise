@@ -42,7 +42,7 @@ export default function Login() {
                 {currentTabIndex === 0 && (
                     <div className="tab">
                         <TextField label="Email" variant="outlined" size="small" fullWidth margin="normal" required/>
-                        <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required/>
+                        <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required type="password"/>
                         <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth onClick={handleLoginOnClick}>LOGIN</Button>
                         <div className="tabFooter">Don't have an account? Register</div>
                     </div>
@@ -53,7 +53,7 @@ export default function Login() {
                     <TextField label="Name" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Email" variant="outlined" size="small" fullWidth margin="normal" required/>
                     <TextField label="Phone" variant="outlined" size="small" fullWidth margin="normal" required/>
-                    <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required/>
+                    <TextField label="Password" variant="outlined" size="small" fullWidth margin="normal" required type="password"/>
                     <Button style={{backgroundColor: "#5753C9", marginTop: "1rem"}} variant="contained" margin="normal" fullWidth onClick={handleRegisterOnClick}>REGISTER</Button>
                     <div className="tabFooter">Already have have an account? Login</div>
                 </div>

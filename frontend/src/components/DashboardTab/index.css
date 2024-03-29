@@ -5,6 +5,7 @@
     padding-bottom: 3rem;
     display: flex;
     flex-wrap: wrap;
+    background-color: rgb(249, 246, 246);
 }
 
 .listContainer {
@@ -22,12 +23,18 @@
     border: 1px solid lightgray;
     margin-right: 1rem;
     overflow: scroll;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: white;
 }
 
 .chart1 {
     flex: 1;
     padding: 5px;
     border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: white;
 }
 
 .chart2 {
@@ -37,4 +44,7 @@
     border: 1px solid lightgray;
     padding: 5px;
     height: 50%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: white;
 }
