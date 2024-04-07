@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 # user table
-# add expenses_table and budget with user entry
+# add expenses_table, budget and daily_total table with user entry
 resource "aws_dynamodb_table" "user-table" {
   name           = "Users"
   billing_mode   = "PROVISIONED"

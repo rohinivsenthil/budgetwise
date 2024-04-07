@@ -11,7 +11,7 @@ def generateResponse(statusCode, body):
     return {
         "statusCode": statusCode,
         "headers": {"Content-Type": "application/json"},
-        "body": body,
+        "body": json.dumps(body),
     }
 
 
@@ -30,7 +30,7 @@ def lambda_handler(event, context):
     response = None
 
     ma_weight = 7
-    preduction_count = 10
+    preduction_count = 7
 
     try:
         values = daily_total_table.scan(Limit=(ma_weight + preduction_count - 1))
