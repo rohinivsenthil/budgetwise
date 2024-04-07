@@ -28,26 +28,33 @@ def lambda_handler(event, context):
     daily_total_table = dynamodb.Table(user_data["Items"][0]["daily_total_table"])
 
     response = None
-    
-    ma_count = 7
-    entry_count = 7
+
+    ma_weight = 7
+    preduction_count = 10
 
     try:
-        values = daily_total_table.scan(Limit=(ma_count + entry_count - 1))
-        print(values)
-        
+        values = daily_total_table.scan(Limit=(ma_weight + preduction_count - 1))
+
         data = {}
-        
-        for i in range(entry_count):
+
+        for i in range(preduction_count):
             sum = 0
             count = 0
-            for j in range(ma_count):
-                sum += values["Items"][i + j]["value"]
-                count += 1
-                
-            avg = sum / count
+
+            for j in range(ma_weight):
+                try:
+                    sum += values["Items"][i + j]["value"]
+                    count += 1
+                except Exception:
+                    pass
+
+            try:
+                avg = sum / count
+            except Exception:
+                avg = 0
+
             data[i] = avg
-            
+
         response = generateResponse(200, data)
 
     except Exception as e:
