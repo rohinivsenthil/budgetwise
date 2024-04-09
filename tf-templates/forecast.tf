@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "crud_lambda_role"
+  name = "lambda_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -29,20 +29,50 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
-resource "aws_iam_policy_attachment" "lambda_execution_policy" {
-  name       = "lambda_execution_policy"
-  policy_arn = "arn:aws:iam::aws:policy/servicerole/AWSLambdaBasicExecutionRole"
-  roles      = aws_iam_role.lambda_role.name
+resource "aws_iam_policy" "lambda_execution_policy" {
+  name        = "lambda_execution_policy"
+  description = "Policy for Lambda function execution"
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Effect   = "Allow",
+        Action   = "lambda:InvokeFunction",
+        Resource = "*"
+      },
+      {
+        Effect = "Allow",
+        Action = "textract:*",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_execution_policy_attachment" {
+  name       = "lambda_execution_policy_attachment"
+  policy_arn = aws_iam_policy.lambda_execution_policy.arn
+  roles      = [aws_iam_role.lambda_role.name]
 }
 
 resource "aws_iam_policy_attachment" "lambda_dynamodb_policy" {
   name       = "lambda_dynamodb_policy"
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
-  roles      = aws_iam_role.lambda_role.name
+  roles      = aws_iam_role.lambda_role.*.name
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = "forecast-function"
+  function_name = "budgetwise-forecast-function"
   description = "Python lambda function to return forecast values"
   role = aws_iam_role.lambda_role.arn
   filename = "lambda_function.zip"
@@ -78,7 +108,6 @@ resource "aws_api_gateway_method" "get_forecast" {
 }
 
 # integrating the lambda function with the api method expense delete
-# will be common for all, just change the resource_id and http_method
 resource "aws_api_gateway_integration" "lambda_integration_expense_delete" {
   rest_api_id             = aws_api_gateway_rest_api.rest_api.id
   resource_id             = aws_api_gateway_resource.forecast.id
