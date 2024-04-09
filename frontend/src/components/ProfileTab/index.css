@@ -1,0 +1,11 @@
+.profileContainer {
+    padding: 2rem;
+    height: 50%;
+    margin-left: 2rem;
+    width: 40%
+}
+
+.profileEntry {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}

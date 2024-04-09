@@ -32,7 +32,29 @@
 - AWS SES: Provide users via email for monthly spending reports
 
 ## How to deploy it 
-TBA
+
+1. Naviagte to the terrform template folder
+```
+cd tf-templates
+```
+
+2. Update your AWS credentials in `provider.tf`
+
+3. Run the following terraform commands:
+```
+terraform init
+```
+```
+terraform plan
+```
+```
+terraform apply
+```
+
+4. For clean-up, run:
+```
+terraform destroy
+```
 
 ## Known bugs and disclaimers
 TBA

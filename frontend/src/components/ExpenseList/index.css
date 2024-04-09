@@ -1,0 +1,71 @@
+.table {
+    padding: 0.5rem 0.1rem 1rem 0.1rem;
+}
+
+.tableTitle {
+    margin-bottom: 1rem;
+    margin-left: 0.4rem;
+    font-weight: bold;
+    width: 100%;
+    color: #465098;
+}
+
+.tableHeading {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tableHeadingContent {
+    flex: 1;
+    text-align: center;
+    padding-bottom: .25rem;
+    padding-top: .25rem;
+    border-bottom: 1px solid lightgray;
+    font-size: small;
+    background-color: #cad0fb;
+}
+
+.tableData {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tableDataContent {
+    flex: 1;
+    text-align: center;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    border-bottom: 1px solid lightgray;
+    font-size: small;
+}
+
+.tableActions {
+    flex: 1;
+    text-align: center;
+    padding-bottom: .5rem;
+    padding-top: .5rem;
+    border-bottom: 1px solid lightgray;
+    font-size: small;
+    display: flex;
+    justify-content: center;
+}
+
+.tableDataCategory-Groceries {
+    background-color: #D0F0C0;
+    padding: 2px;    
+}
+
+.tableDataCategory-Utilities {
+    background-color: #B9D9EB;
+    padding: 2px;
+}
+
+.tableDataCategory-Other {
+    background-color: #D8BFD8;
+    padding: 2px;
+}
+
+.tableDataCategory-Food {
+    background-color: #f2eb9e;
+    padding: 2px;
+}
