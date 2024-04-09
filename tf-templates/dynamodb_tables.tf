@@ -162,3 +162,4 @@ resource "aws_dynamodb_table" "budgets" {
     projection_type    = "ALL"
   }
 }
+
