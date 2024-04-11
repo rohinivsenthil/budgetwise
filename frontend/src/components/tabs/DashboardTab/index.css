@@ -38,13 +38,21 @@
 }
 
 .chart2 {
-    margin: 1rem;
-    margin-top: 0;
     flex: 1;
-    border: 1px solid lightgray;
     padding: 5px;
-    height: 50%;
+    border: 1px solid lightgray;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
     border-radius: 5px;
     background-color: white;
+    margin-right: 1rem;
+}
+
+.chart3 {
+    flex: 0.5;
+    padding: 5px;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: white;
+    margin-right: 1rem;
 }

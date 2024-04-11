@@ -14,6 +14,13 @@ const options = {
         color: '#465098',
       }
   },
+  subtitle: {
+    text: 'Data Synced with AWS',
+    style: {
+    fontSize: '9px',
+    color: '#999999',
+    }
+  },
   xAxis: {
     categories: ['Groceries', 'Food', 'Utilities', 'Other']
   },
@@ -33,6 +40,6 @@ const options = {
   }]
 };
 
-const BarChart = () => <HighchartsReact highcharts={Highcharts} options={options} />;
+const ExpenseBudgetChart = () => <HighchartsReact highcharts={Highcharts} options={options} />;
 
-export default BarChart;
+export default ExpenseBudgetChart;

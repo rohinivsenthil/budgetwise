@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
-import {categories} from '../../constants'
+import {categories} from '../../../constants'
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 export default function CreateExpenseModal(props) {

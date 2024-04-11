@@ -7,15 +7,20 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
-import {categories} from '../../constants'
+import {categories} from '../../../constants'
 
 export default function UpdateExpenseModal(props) {
 
-  const { modal, toggle, focusItem } = props;
+  const { modal, toggle, focusItem, method } = props;
 
   const handleSubmit = async () => {
     toggle();
   };
+
+  const handleOnUpdate = async () => {
+    method({})
+    toggle();
+  }
 
   return (
     <Dialog
@@ -62,7 +67,7 @@ export default function UpdateExpenseModal(props) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>
-            <Button onClick={handleSubmit} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}>Update</Button>
+            <Button onClick={handleOnUpdate} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}>Update</Button>
       </DialogActions>
     </Dialog>
   );

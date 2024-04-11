@@ -8,11 +8,16 @@ import DialogContentText from '@mui/material/DialogContentText';
 
 export default function DeleteExpenseModal(props) {
 
-  const { modal, toggle } = props;
+  const { modal, toggle, method, focusItem } = props;
 
   const handleSubmit = async () => {
     toggle();
   };
+
+  const handleOnDelete = async () => {
+    method({expense_id: focusItem.expense_id})
+    toggle();
+  }
 
   return (
     <Dialog
@@ -31,7 +36,7 @@ export default function DeleteExpenseModal(props) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>
-            <Button onClick={handleSubmit} autoFocus style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Confirm</Button>
+            <Button onClick={handleOnDelete} autoFocus style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Confirm</Button>
       </DialogActions>
     </Dialog>
   );

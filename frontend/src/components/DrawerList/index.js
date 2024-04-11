@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
 import PersonIcon from '@mui/icons-material/Person';
 
 export default function DrawerList(props) {
@@ -19,6 +20,12 @@ export default function DrawerList(props) {
             </ListItem>
             <ListItem disablePadding>
                 <ListItemButton onClick={() => setTab(1)}>
+                    <ListItemIcon><EqualizerIcon style={{color: '#465098'}}/></ListItemIcon>
+                    <ListItemText primary={"Budget"} />
+                </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+                <ListItemButton onClick={() => setTab(2)}>
                     <ListItemIcon><PersonIcon style={{color: '#465098'}}/></ListItemIcon>
                     <ListItemText primary={"Profile"} />
                 </ListItemButton>
