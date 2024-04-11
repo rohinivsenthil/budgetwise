@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Receipt from '@mui/icons-material/Receipt';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LogoutIcon from '@mui/icons-material/Logout';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import { DRAWER_WIDTH } from '../../constants'
 import "./index.css"
 import { API_URL } from "../../config";
@@ -64,6 +65,14 @@ export default function Dashboard() {
         }
     }
 
+    const createReport = async () => {
+      try {
+        await axios.post(`${API_URL}/reports`);
+      } catch (error) {
+        console.error('Error creating report:', error);
+      }
+    }
+
     useEffect(() => {
         const fetchExpenses = async () => {
           try {
@@ -95,6 +104,7 @@ export default function Dashboard() {
                     <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
                         <div className="toolBarTitle">Your BudgetWise Dashboard</div>
                         <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
+                            <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '42%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<TimelineIcon/>} onClick={createReport}>Generate Report</Button>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '40%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>} onClick={createBudgetToggle}>Create Budget</Button>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold'}} startIcon={<Receipt/>} onClick={createExpenseToggle}>Add Expense</Button>
                         </div>
