@@ -3,11 +3,18 @@ import uuid
 import json
 from boto3.dynamodb.conditions import Key
 from decimal import Decimal
+import csv
+from io import StringIO
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 
 region = "us-east-2"
 
 dynamodb = boto3.resource("dynamodb", region_name=region)
 textract = boto3.client('textract')
+ses = boto3.client('ses', region_name=region)
+sns_client = boto3.client('sns')
 
 ###################
 # Expenses APIs
@@ -163,6 +170,57 @@ def analyze_receipts(table, receipt_file):
     except Exception as e:
         print("Error:", e)
         return generateResponse(400, str(e))
+    
+###################
+# Reports APIs
+###################
+
+def createReport(expenses_table):
+    try:
+        expenses = viewAllExpenses(expenses_table)
+        body_json = json.loads(expenses['body'])
+        expenses_data = body_json.get('Items', [])
+        
+        csv_report = StringIO()
+        csv_writer = csv.DictWriter(csv_report, fieldnames=["expense_id", "user_id", "name", "amount", "date", "category"])
+        csv_writer.writeheader()
+        for expense in expenses_data:
+            csv_writer.writerow(expense)
+        csv_report.seek(0)
+        
+        msg = MIMEMultipart()
+        msg['Subject'] = "Monthly Expense Report"
+        msg['From'] = "rohinivsenthil@gmail.com"
+        msg['To'] = "rv8542@rit.edu"
+        part = MIMEText("PFA")
+        msg.attach(part)
+        
+        part = MIMEApplication(csv_report.getvalue())
+        part.add_header('Content-Disposition', 'attachment', filename="expense_report.csv")
+        msg.attach(part)
+        
+        raw_message = {'Data': msg.as_string()}
+        response = ses.send_raw_email(Source=msg['From'], Destinations=[msg['To']], RawMessage=raw_message)
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
+
+###################
+# Alerts APIs
+###################
+
+def createAlert():  
+    try:  
+        message = f"Alert: Your expense has exceeded the budget threshold."
+        response = sns_client.publish(
+            PhoneNumber="+15854062509",
+            Message=message
+        )
+        return generateResponse(200, response)
+    except Exception as e:
+        print("Error:", e)
+        return generateResponse(400, str(e))
 
 ###################
 # API Handler
@@ -204,7 +262,13 @@ def lambda_handler(event, context):
         elif path.startswith("/receipts"):
             if method == "POST":
                 response = analyze_receipts(expenses_table, event['body'])
-        
+        elif path.startswith("/reports"):
+            if method == "POST":
+                response = createReport(expenses_table)
+        elif path.startswith("/alerts"):
+            if method == "POST":
+                response = createAlert()
+
     except Exception as e:
         print("Error:", e)
         response = generateResponse(400, "Error processing request")
