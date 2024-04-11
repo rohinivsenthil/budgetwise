@@ -38,7 +38,7 @@ export default function Dashboard() {
     const updateExpenseToggle = () => setUpdateExpenseModal(!updateExpenseModal);
 
     const [expenses, setExpenses] = useState([]);
-    const [budgets, setBudgets] = useState([]);
+    const [budgets, setBudgets] = useState([{"amount": 0.0, "categories": "{\"food\":0,\"groceries\":0,\"other\":0,\"utilities\":0}"}]);
 
     const createExpense = async (data) => {
         try {
@@ -64,7 +64,6 @@ export default function Dashboard() {
         }
     }
 
-
     useEffect(() => {
         const fetchExpenses = async () => {
           try {
@@ -87,8 +86,8 @@ export default function Dashboard() {
           fetchBudgets();
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
-    
+    }, []);
+
     return (
             <Box sx={{ display: 'flex' }}>
                 <AppBar position="fixed" sx={{ width: `calc(100% - ${DRAWER_WIDTH}px)`, ml: `${DRAWER_WIDTH}px` }}>
@@ -117,15 +116,15 @@ export default function Dashboard() {
                 <div className="mainContainer">
                   {tab === 0 && (
                       <>
-                          <CreateExpenseModal modal={createExpenseModal} toggle={createExpenseToggle}/>
+                          <CreateExpenseModal modal={createExpenseModal} toggle={createExpenseToggle} method={createExpense}/>
                           <DeleteExpenseModal modal={deleteExpenseModal} toggle={deleteExpenseToggle} method={deleteExpense} focusItem={focusItem}/>
                           <UpdateExpenseModal modal={updateExpenseModal} toggle={updateExpenseToggle} focusItem={focusItem} method={editExpense}/>
                           <CreateBudgetModal modal={createBudgetModal} toggle={createBudgetToggle}/>
-                          <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem} expenses={expenses}/>
+                          <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem} expenses={expenses} budgets={budgets}/>
                       </>
                   )}
                   {tab === 2 && <ProfileTab/>}
-                  {tab === 1 && <BudgetTab/>}
+                  {tab === 1 && <BudgetTab budgets={budgets}/>}
                 </div>
             </Box>
     );
