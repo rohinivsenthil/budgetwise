@@ -13,23 +13,19 @@
 
 ## Prerequisites
 
-### Tech Stack
+### For Demo
 
-- React
+- Terraform
 
-### AWS Resources
+### For Development
 
-- AWS Cognito: User authentication
-- AWS Amplify: Hosting frontend (React) of the application
-- AWS S3: Asset management
-- AWS DynamoDB: Database for storing application data
-- AWS Lambda: Serverless backend of application
-- AWS StepFunction: Error handling and orchestration of Lambda functions 
-- AWS API Gateway: Exposing Lambda functions to frontend
-- AWS QuickSight: Create visualization analytics to embed in application
-- AWS Textract: OCR to submit expenses via reciept uploads
-- AWS SNS: Alert users via SMS on budget exceeds
-- AWS SES: Provide users via email for monthly spending reports
+- Node v21.6.1
+- npm v10.2.4
+- Terraform v1.5.7
+- AWS Credentials
+- Docker Desktop v4.22.1
+- Docker CLI v24.0.5
+- Docker Hub Credentials 
 
 ## How to deploy it 
 
@@ -57,19 +53,21 @@ terraform destroy
 ```
 
 ## Known bugs and disclaimers
-TBA
+
+Check our [Trello board](https://trello.com/b/qxPBwZW3/2235-swen-514-614-01-5e-replacewithyourcoolname) for our tracked bugs/issues.
 
 ## Data sources and other dependencies
-TBA
+
+There is no external data source or dependncy leveraged by BudgetWise. However, we do prepopulate data into our database with Terraform scripts. 
 
 ## How to test/run/access/use it
-TBA
+
+Refer to our project's User Guide for more details on how to use the application.
 
 ## Additional Info
-TBA
+
+Refer to out project's Whitepaper for details articulating the overall problem, projected cost savings, benefits of technologies and other valuable information.
 
 ## License
 
-MIT License
-
-See LICENSE for details.
+MIT License. See LICENSE for details.
