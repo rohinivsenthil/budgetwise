@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import './index.css'
 
 export default function BudgetTab(props) {
-    const {budgets} = props;
+    const {budgets, updateBudgetToggle} = props;
     const budget = budgets[0]
     return (
         <div className="dashTabContainer">
@@ -13,7 +13,7 @@ export default function BudgetTab(props) {
             <div className="chart3">
                 <div className="budgetDisplay">Current Budget:</div>
                 <div className="budgetValue">{`$${budget.amount}`}</div>
-                <Button style={{backgroundColor: '#5753C9', color: 'white', fontSize: 'x-small', width: '40%', fontWeight: 'bold', marginTop: '5rem', marginLeft: '2rem'}} startIcon={<EditIcon/>}>Update Budget</Button>
+                <Button style={{backgroundColor: '#5753C9', color: 'white', fontSize: 'x-small', width: '40%', fontWeight: 'bold', marginTop: '5rem', marginLeft: '2rem'}} startIcon={<EditIcon/>} onClick={updateBudgetToggle}>Update Budget</Button>
             </div>
                 <div className="chart1"><BudgetPieChart budget={budget}/></div>
             </div>

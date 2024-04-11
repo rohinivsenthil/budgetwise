@@ -13,6 +13,7 @@ import CreateExpenseModal from '../../components/modals/CreateExpenseModal';
 import DeleteExpenseModal from '../../components/modals/DeleteExpenseModal';
 import UpdateExpenseModal from '../../components/modals/UpdateExpenseModal';
 import CreateBudgetModal from "../../components/modals/CreateBudgetModal";
+import UpdateBudgetModal from '../../components/modals/UpdateBudgetModal';
 import Button from '@mui/material/Button';
 import Receipt from '@mui/icons-material/Receipt';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -38,6 +39,9 @@ export default function Dashboard() {
     const [updateExpenseModal, setUpdateExpenseModal] = useState(false);
     const updateExpenseToggle = () => setUpdateExpenseModal(!updateExpenseModal);
 
+    const [updateBudgetModal, setUpdateBudgetModal] = useState(false);
+    const updateBudgetToggle = () => setUpdateBudgetModal(!updateBudgetModal);
+
     const [expenses, setExpenses] = useState([]);
     const [budgets, setBudgets] = useState([{"amount": 0.0, "categories": "{\"food\":0,\"groceries\":0,\"other\":0,\"utilities\":0}"}]);
 
@@ -53,15 +57,23 @@ export default function Dashboard() {
         try {
             await axios.put(`${API_URL}/expenses`, data);
         } catch (error) {
-            console.error('Error creating expense:', error);
+            console.error('Error editing expense:', error);
         }
+    }
+
+    const editBudget = async (data) => {
+      try {
+          await axios.put(`${API_URL}/budgets`, data);
+      } catch (error) {
+          console.error('Error updating budget:', error);
+      }
     }
 
     const deleteExpense = async (data) => {
         try {
           await axios.delete(`${API_URL}/expenses`, data);
         } catch (error) {
-          console.error('Error creating expense:', error);
+          console.error('Error deleting expense:', error);
         }
     }
 
@@ -100,23 +112,29 @@ export default function Dashboard() {
     return (
             <Box sx={{ display: 'flex' }}>
                 <AppBar position="fixed" sx={{ width: `calc(100% - ${DRAWER_WIDTH}px)`, ml: `${DRAWER_WIDTH}px` }}>
-                    { tab === 0? 
-                    <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
+                    {tab === 0 && (
+                      <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
                         <div className="toolBarTitle">Your BudgetWise Dashboard</div>
                         <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '42%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<TimelineIcon/>} onClick={createReport}>Generate Report</Button>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '40%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<BarChartIcon/>} onClick={createBudgetToggle}>Create Budget</Button>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold'}} startIcon={<Receipt/>} onClick={createExpenseToggle}>Add Expense</Button>
                         </div>
-                    </Toolbar>
-                    :
-                    <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
-                        <div className="toolBarTitle">Your BudgetWise Profile</div>
-                        <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
+                      </Toolbar>
+                    )}
+                    {tab === 2 && (
+                      <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
+                          <div className="toolBarTitle">Your BudgetWise Profile</div>
+                          <div style={{width: '40%', display: 'flex', justifyContent: 'flex-end'}}>
                             <Button style={{backgroundColor: 'whitesmoke', color: '#465098', fontSize: 'x-small', width: '35%', fontWeight: 'bold', marginRight: '1rem'}} startIcon={<LogoutIcon/>}> Logout</Button>
-                        </div>
-                    </Toolbar>
-                    }
+                          </div>
+                      </Toolbar>
+                    )}
+                    {tab === 1 && (
+                      <Toolbar style={{backgroundColor: "#5753C9", display: 'flex', justifyContent: 'space-between'}}>
+                        <div className="toolBarTitle">Your BudgetWise Budget</div>
+                      </Toolbar>
+                    )}
                 </AppBar>
                 <Drawer sx={{ width: DRAWER_WIDTH, flexShrink: 0, display: 'block', '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box'}}} variant="permanent" anchor="left" >
                     <Toolbar style={{backgroundColor: '#cad0fb'}} />
@@ -134,7 +152,12 @@ export default function Dashboard() {
                       </>
                   )}
                   {tab === 2 && <ProfileTab/>}
-                  {tab === 1 && <BudgetTab budgets={budgets}/>}
+                  {tab === 1 && (
+                      <>
+                        <BudgetTab budgets={budgets} updateBudgetToggle={updateBudgetToggle}/>
+                        <UpdateBudgetModal modal={updateBudgetModal} toggle={updateBudgetToggle} focusItem={budgets} method={editBudget}/>
+                      </>
+                  )}
                 </div>
             </Box>
     );
