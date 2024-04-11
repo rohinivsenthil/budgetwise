@@ -210,11 +210,12 @@ def createReport(expenses_table):
 # Alerts APIs
 ###################
 
-def createAlert():  
+def createAlert(data):  
     try:  
+        topic_arn = data["topic_arn"]
         message = f"Alert: Your expense has exceeded the budget threshold."
         response = sns_client.publish(
-            PhoneNumber="+15854062509",
+            TopicArn=topic_arn,
             Message=message
         )
         return generateResponse(200, response)
@@ -267,7 +268,7 @@ def lambda_handler(event, context):
                 response = createReport(expenses_table)
         elif path.startswith("/alerts"):
             if method == "POST":
-                response = createAlert()
+                response = createAlert(json.loads(event["body"]))
 
     except Exception as e:
         print("Error:", e)

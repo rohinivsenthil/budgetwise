@@ -229,7 +229,7 @@ resource "aws_api_gateway_method" "create_report" {
   authorization = "NONE"
 }
 
-# integrating the lambda function with the api method for deleting a budget
+# integrating the lambda function with the api method for creating a report
 resource "aws_api_gateway_integration" "lambda_integration_report_create" {
   rest_api_id             = aws_api_gateway_rest_api.rest_api.id
   resource_id             = aws_api_gateway_resource.reports.id
@@ -238,6 +238,33 @@ resource "aws_api_gateway_integration" "lambda_integration_report_create" {
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda_function.invoke_arn
 }
+
+# creating the api gateway resource for alerts
+# /alerts
+resource "aws_api_gateway_resource" "alerts" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
+  path_part   = "alerts"
+}
+
+# creating the api method for a resource to create an alert
+resource "aws_api_gateway_method" "create_alert" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.alerts.id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+# integrating the lambda function with the api method for creating an alert
+resource "aws_api_gateway_integration" "lambda_integration_alert_create" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.alerts.id
+  http_method             = aws_api_gateway_method.create_alert.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
 
 # Deploying API Gateway Deployment
 resource "aws_api_gateway_deployment" "deployment" {
@@ -264,6 +291,8 @@ resource "aws_api_gateway_deployment" "deployment" {
     aws_api_gateway_integration.lambda_integration_analyze_receipt,
     aws_api_gateway_method.create_report,
     aws_api_gateway_integration.lambda_integration_report_create,
+    aws_api_gateway_method.create_alert,
+    aws_api_gateway_integration.lambda_integration_alert_create,
     # Add dependencies for other resources as needed
   ]
 }

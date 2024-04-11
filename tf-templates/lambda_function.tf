@@ -41,3 +41,12 @@ resource "aws_lambda_permission" "ses_permission" {
   # within the API Gateway "REST API".
   source_arn = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*"
 }
+
+resource "aws_lambda_permission" "sns_permission" {
+  statement_id  = "AllowLambdaInvokeSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_function.arn
+  principal     = "sns.amazonaws.com"
+
+  source_arn    = aws_sns_topic.alert.arn
+}
