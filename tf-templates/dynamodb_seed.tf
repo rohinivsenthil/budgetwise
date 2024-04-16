@@ -723,10 +723,10 @@ resource "aws_dynamodb_table_item" "expenses_seed" {
 
 locals {
   budget_categories = {
-    "utilities": 100,
-    "groceries": 100,
-    "food": 100,
-    "other": 200
+    "utilities": 700,
+    "groceries": 800,
+    "food": 1000,
+    "other": 500
   }
 }
 
@@ -739,7 +739,7 @@ resource "aws_dynamodb_table_item" "budgets_seed" {
   item = jsonencode({
     "budget_id"  : {"S": "1"},
     "user_id"    : {"S": "1"},
-    "amount"     : {"N": "500"},
+    "amount"     : {"N": "3000"},
     "categories" : {"S": jsonencode(local.budget_categories)}
   })
 }

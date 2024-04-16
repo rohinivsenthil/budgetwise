@@ -22,10 +22,17 @@ const ForecastChart = ({ forecast }) => {
           color: '#465098',
         }
       },
+      subtitle: {
+        text: 'Data Synced with AWS',
+        style: {
+        fontSize: '9px',
+        color: '#999999',
+        }
+      },
       xAxis: {
         categories: label, // Using label data for xAxis categories
         title: {
-          text: 'Months'
+          text: 'Days'
         }
       },
       yAxis: {
@@ -35,9 +42,9 @@ const ForecastChart = ({ forecast }) => {
       },
       plotOptions: {
         column: {
-          dataLabels: {
-            enabled: true
-          }
+          // dataLabels: {
+          //   enabled: true
+          // }
         }
       },
       series: [{

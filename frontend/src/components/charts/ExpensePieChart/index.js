@@ -52,7 +52,7 @@ const ExpensePieChart = (props) => {
       dataLabels: {
         enabled: true,
         // eslint-disable-next-line no-template-curly-in-string
-        format: '<b>{point.name}</b>: ${point.y}',
+        format: '<b>{point.name}</b>: ${point.y:.2f}',
       }
     }]
   };
