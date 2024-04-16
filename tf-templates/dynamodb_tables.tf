@@ -88,6 +88,11 @@ resource "aws_dynamodb_table" "expenses" {
     type = "S"
   }
 
+  attribute {
+    name = "timestamp"
+    type = "N"
+  }
+
   global_secondary_index {
     name               = "user_id-index"
     hash_key           = "user_id"
@@ -115,6 +120,12 @@ resource "aws_dynamodb_table" "expenses" {
   global_secondary_index {
     name               = "date-index"
     hash_key           = "date"
+    projection_type    = "ALL"
+  }
+
+  global_secondary_index {
+    name               = "timestamp-index"
+    hash_key           = "timestamp"
     projection_type    = "ALL"
   }
 }
@@ -163,3 +174,63 @@ resource "aws_dynamodb_table" "budgets" {
   }
 }
 
+resource "aws_dynamodb_table" "daily_totals" {
+  name           = "daily_totals"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "daily_total_id"
+
+  attribute {
+    name = "daily_total_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "user_id"
+    type = "S"
+  }
+
+  attribute {
+    name = "date"
+    type = "S"
+  }
+
+  attribute {
+    name = "value"
+    type = "N"
+  }
+
+  attribute {
+    name = "timestamp"
+    type = "N"
+  }
+
+  global_secondary_index {
+    name               = "daily_total_id-index"
+    hash_key           = "daily_total_id"
+    projection_type    = "ALL"
+  }
+
+    global_secondary_index {
+    name               = "user_id-index"
+    hash_key           = "user_id"
+    projection_type    = "ALL"
+  }
+
+    global_secondary_index {
+    name               = "date-index"
+    hash_key           = "date"
+    projection_type    = "ALL"
+  }
+
+    global_secondary_index {
+    name               = "value-index"
+    hash_key           = "value"
+    projection_type    = "ALL"
+  }
+
+    global_secondary_index {
+    name               = "timestamp-index"
+    hash_key           = "timestamp"
+    projection_type    = "ALL"
+  }
+}

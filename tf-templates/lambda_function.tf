@@ -2,9 +2,20 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = "budgetwise-function"
   description = "Python lambda function to perform CRUD actions on the DynamoDB"
   role = aws_iam_role.lambda_role.arn
-  filename = "lambda_function.zip"
-  source_code_hash = filebase64sha256("lambda_function.zip")
-  handler = "lambda_function.lambda_handler"
+  filename = "crud_lambda_function.zip"
+  source_code_hash = filebase64sha256("crud_lambda_function.zip")
+  handler = "crud_lambda_function.lambda_handler"
+  runtime = "python3.10"
+  timeout = 10
+}
+
+resource "aws_lambda_function" "daily_total_lambda_function" {
+  function_name = "budgetwise-daily-total-function"
+  description = "Python lambda function to calculate daily total"
+  role = aws_iam_role.lambda_role.arn
+  filename = "daily_total_function.zip"
+  source_code_hash = filebase64sha256("daily_total_function.zip")
+  handler = "daily_total_function.lambda_handler"
   runtime = "python3.10"
   timeout = 10
 }

@@ -6,7 +6,7 @@ import ExpensePieChart from "../../charts/ExpensePieChart";
 import ForecastChart from "../../charts/ForecastChart";
 
 export default function DashboardTab(props) {
-    const {deleteExpenseToggle, updateExpenseToggle, setFocusItem, expenses, budgets} = props;
+    const {deleteExpenseToggle, updateExpenseToggle, setFocusItem, expenses, budgets, forecast} = props;
     return (
         <div className="dashTabContainer">
             <div className="listContainer">
@@ -15,7 +15,7 @@ export default function DashboardTab(props) {
             </div>
             <div className="listContainer">
                 <div className="chart2"><ExpensePieChart expenses={expenses}/></div>
-                <div className="chart1"><ForecastChart/></div>
+                <div className="chart1"><ForecastChart forecast={forecast}/></div>
             </div>
         </div>
     );

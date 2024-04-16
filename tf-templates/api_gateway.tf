@@ -265,6 +265,32 @@ resource "aws_api_gateway_integration" "lambda_integration_alert_create" {
   uri                     = aws_lambda_function.lambda_function.invoke_arn
 }
 
+# creating the api gateway resource for forecast
+# /forecast
+resource "aws_api_gateway_resource" "forecast" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
+  path_part   = "forecast"
+}
+
+# creating the api method for a resource to get forecasted values
+resource "aws_api_gateway_method" "get_forecast" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.forecast.id
+  http_method             = "GET"
+  authorization           = "NONE"
+}
+
+# integrating the lambda function with the api method for forecasting
+resource "aws_api_gateway_integration" "lambda_integration_forecasting" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.forecast.id
+  http_method             = aws_api_gateway_method.get_forecast.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.lambda_function.invoke_arn
+}
+
 
 # Deploying API Gateway Deployment
 resource "aws_api_gateway_deployment" "deployment" {
@@ -293,6 +319,8 @@ resource "aws_api_gateway_deployment" "deployment" {
     aws_api_gateway_integration.lambda_integration_report_create,
     aws_api_gateway_method.create_alert,
     aws_api_gateway_integration.lambda_integration_alert_create,
+    aws_api_gateway_method.get_forecast,
+    aws_api_gateway_integration.lambda_integration_forecasting,
     # Add dependencies for other resources as needed
   ]
 }

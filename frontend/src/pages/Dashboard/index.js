@@ -44,6 +44,7 @@ export default function Dashboard() {
 
     const [expenses, setExpenses] = useState([]);
     const [budgets, setBudgets] = useState([{"amount": 0.0, "categories": "{\"food\":0,\"groceries\":0,\"other\":0,\"utilities\":0}"}]);
+    const [forecast, setForecast] = useState([]);
 
     const createExpense = async (data) => {
         try {
@@ -106,6 +107,16 @@ export default function Dashboard() {
           };
           fetchBudgets();
 
+          const fetchForecast = async () => {
+            try {
+              const response = await axios.get(`${API_URL}/forecast`);
+              setForecast(response);
+            } catch (error) {
+              console.error('Error fetching forecast:', error);
+            }
+          };
+          fetchForecast();
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -148,7 +159,7 @@ export default function Dashboard() {
                           <DeleteExpenseModal modal={deleteExpenseModal} toggle={deleteExpenseToggle} method={deleteExpense} focusItem={focusItem}/>
                           <UpdateExpenseModal modal={updateExpenseModal} toggle={updateExpenseToggle} focusItem={focusItem} method={editExpense}/>
                           <CreateBudgetModal modal={createBudgetModal} toggle={createBudgetToggle}/>
-                          <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem} expenses={expenses} budgets={budgets}/>
+                          <DashboardTab deleteExpenseToggle={deleteExpenseToggle} updateExpenseToggle={updateExpenseToggle} setFocusItem={setFocusItem} expenses={expenses} budgets={budgets} forecast={forecast}/>
                       </>
                   )}
                   {tab === 2 && <ProfileTab/>}
