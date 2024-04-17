@@ -2,6 +2,7 @@ import boto3
 import uuid
 import json
 import datetime
+import time
 from boto3.dynamodb.conditions import Key, Attr
 from decimal import Decimal
 import csv
@@ -25,12 +26,14 @@ sns_client = boto3.client("sns")
 def createExpense(table, data):
     user_id = "1"  # Default user_id
     today = datetime.date.today()
-    datetime_obj = datetime.datetime.combine(today, datetime.datetime.min.time())
+    formatted_date = today.strftime("%m/%d/%Y")
+    timestamp = int(time.mktime(today.timetuple()))
     try:
         data["expense_id"] = str(uuid.uuid4())
         data["user_id"] = user_id
         data["amount"] = Decimal(str(data["amount"]))  # Convert amount to Decimal
-        data["date"] = int(datetime_obj.timestamp())
+        data["date"] = formatted_date
+        data["timestamp"] = timestamp
         response = table.put_item(Item=data)
         return generateResponse(200, response)
     except Exception as e:

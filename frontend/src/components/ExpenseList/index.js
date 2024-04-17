@@ -6,10 +6,17 @@ import EditIcon from '@mui/icons-material/Edit';
 
 export default function ExpenseList(props) {
     const {deleteExpenseToggle, updateExpenseToggle, setFocusItem, expenses} = props;
+    
     const onUpdate = (item) => {
         setFocusItem(item);
         updateExpenseToggle();
     }
+
+    const onDelete = (item) => {
+        setFocusItem(item);
+        deleteExpenseToggle()
+    }
+
     return (
         <div className="table">
             <div className="tableTitle">Expense History</div>
@@ -32,7 +39,7 @@ export default function ExpenseList(props) {
                         <IconButton aria-label="edit" style={{padding: 0}} onClick={() => onUpdate(item)}>
                             <EditIcon fontSize="small"/>
                         </IconButton>
-                        <IconButton aria-label="delete" style={{padding: 0, marginLeft: '.5rem'}} onClick={deleteExpenseToggle}>
+                        <IconButton aria-label="delete" style={{padding: 0, marginLeft: '.5rem'}} onClick={() => onDelete(item)}>
                             <DeleteIcon fontSize="small"/>
                         </IconButton>
                     </div>

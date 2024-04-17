@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,16 +7,31 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
-import {categories} from '../../../constants'
+import { categories } from '../../../constants';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import './index.css'
+import './index.css';
 
 export default function CreateExpenseModal(props) {
 
-  const { modal, toggle } = props;
-  const [fileName, setFileName] = useState("No file chosen");
+  const { modal, toggle, method } = props;
+
+  // State variables to store values from text fields
+  const [expenseName, setExpenseName] = useState('');
+  const [expenseCategory, setExpenseCategory] = useState('');
+  const [expenseAmount, setExpenseAmount] = useState('');
+  const [fileName, setFileName] = useState('No file chosen');
 
   const handleSubmit = async () => {
+    toggle();
+  };
+
+  const handleCreateExpense = async () => {
+    const createExpense = {
+      name: expenseName,
+      category: expenseCategory,
+      amount: expenseAmount,
+    };
+    method(createExpense)
     toggle();
   };
 
@@ -27,9 +42,9 @@ export default function CreateExpenseModal(props) {
   }
 
   const handleFileName = (e) => {
-    const file = e.target.value
-    setFileName(extractFilename(file))
-  }
+    const file = e.target.value;
+    setFileName(extractFilename(file));
+  };
 
   return (
     <Dialog
@@ -47,6 +62,8 @@ export default function CreateExpenseModal(props) {
                 sx={{ m: 1, width: '40%' }}
                 variant="standard"
                 helperText="Expense Name"
+                value={expenseName}
+                onChange={(e) => setExpenseName(e.target.value)}
             />
             <TextField
                 id="standard-select-category"
@@ -54,7 +71,9 @@ export default function CreateExpenseModal(props) {
                 sx={{ m: 1, width: '40%' }}
                 variant='standard'
                 helperText="Expense Category"
-                >
+                value={expenseCategory}
+                onChange={(e) => setExpenseCategory(e.target.value)}
+            >
                 {categories.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                     {option.label}
@@ -70,6 +89,8 @@ export default function CreateExpenseModal(props) {
                 }}
                 style={{marginBottom: '2rem'}}
                 variant="standard"
+                value={expenseAmount}
+                onChange={(e) => setExpenseAmount(parseFloat(e.target.value))}
             />
             <br/>
             <input className="fileInput" type="file" id="actual-btn" hidden onChange={(e) => handleFileName(e)}/>
@@ -78,7 +99,7 @@ export default function CreateExpenseModal(props) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>
-            <Button onClick={handleSubmit} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}> Add Expense</Button>
+            <Button onClick={handleCreateExpense} autoFocus style={{color: '#465098', width: '20%', fontSize: 'small', fontWeight: 'bold'}}> Add Expense</Button>
       </DialogActions>
     </Dialog>
   );

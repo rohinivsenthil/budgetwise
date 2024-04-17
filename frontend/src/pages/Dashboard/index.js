@@ -46,17 +46,28 @@ export default function Dashboard() {
     const [budgets, setBudgets] = useState([{"amount": 0.0, "categories": "{\"food\":0,\"groceries\":0,\"other\":0,\"utilities\":0}"}]);
     const [forecast, setForecast] = useState([]);
 
+    const refreshData = async () => {
+      const response = await axios.get(`${API_URL}/expenses`);
+      setExpenses(response.data.Items); 
+    }
+
     const createExpense = async (data) => {
         try {
-          await axios.post(`${API_URL}/expenses`, data);
+          const jsonString = JSON.stringify(data);
+          const escapedString = jsonString.replace(/\\/g, '\\\\');
+          await axios.post(`${API_URL}/expenses`, escapedString);
+          await refreshData();
         } catch (error) {
           console.error('Error creating expense:', error);
         }
     }
     
     const editExpense = async (data) => {
-        try {
-            await axios.put(`${API_URL}/expenses`, data);
+      try {
+        const jsonString = JSON.stringify(data);
+        const escapedString = jsonString.replace(/\\/g, '\\\\');
+          await axios.patch(`${API_URL}/expenses`, escapedString);
+          await refreshData();
         } catch (error) {
             console.error('Error editing expense:', error);
         }
@@ -72,7 +83,10 @@ export default function Dashboard() {
 
     const deleteExpense = async (data) => {
         try {
-          await axios.delete(`${API_URL}/expenses`, data);
+          const jsonString = JSON.stringify(data);
+          const escapedString = jsonString.replace(/\\/g, '\\\\');
+          await axios.delete(`${API_URL}/expenses`, {data: escapedString});
+          await refreshData();
         } catch (error) {
           console.error('Error deleting expense:', error);
         }
