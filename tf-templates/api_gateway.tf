@@ -49,6 +49,50 @@ resource "aws_api_gateway_method" "view_all_expenses" {
   authorization = "NONE"
 }
 
+# creating the api method for options
+resource "aws_api_gateway_method" "options_method" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_response" "options_200" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = aws_api_gateway_method.options_method.http_method
+  status_code   = "200"
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true,
+    "method.response.header.Access-Control-Allow-Methods" = true,
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "options_integration" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = aws_api_gateway_method.options_method.http_method
+  type          = "MOCK"
+  passthrough_behavior = "WHEN_NO_MATCH"
+
+  request_templates = {
+    "application/json" = "{ \"statusCode\": 200 }"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_integration_response" {
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  resource_id   = aws_api_gateway_resource.expenses.id
+  http_method   = aws_api_gateway_method.options_method.http_method
+  status_code   = aws_api_gateway_method_response.options_200.status_code
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Requested-With'",
+    "method.response.header.Access-Control-Allow-Methods" = "'*'",
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+}
+
 # integrating the lambda function with the api method expense delete
 # will be common for all, just change the resource_id and http_method
 resource "aws_api_gateway_integration" "lambda_integration_expense_delete" {
@@ -321,6 +365,10 @@ resource "aws_api_gateway_deployment" "deployment" {
     aws_api_gateway_integration.lambda_integration_alert_create,
     aws_api_gateway_method.get_forecast,
     aws_api_gateway_integration.lambda_integration_forecasting,
+    aws_api_gateway_method.options_method,
+    aws_api_gateway_integration.options_integration,
+    aws_api_gateway_method_response.options_200,
+    aws_api_gateway_integration_response.options_integration_response,
     # Add dependencies for other resources as needed
   ]
 }
