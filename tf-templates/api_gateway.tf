@@ -229,9 +229,6 @@ resource "aws_api_gateway_method" "analyze_receipt" {
   resource_id   = aws_api_gateway_resource.receipts.id
   http_method   = "POST"
   authorization = "NONE"
-  request_models = {
-    "multipart/form-data" = aws_api_gateway_model.multipartFormData.name
-  }
 }
 
 # integrating the lambda function with the api method for analyzing a receipt
@@ -242,19 +239,6 @@ resource "aws_api_gateway_integration" "lambda_integration_analyze_receipt" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.lambda_function.invoke_arn
-}
-
-# Request model for multipart/form-data
-resource "aws_api_gateway_model" "multipartFormData" {
-  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
-  name          = "MultipartFormData"
-  content_type  = "multipart/form-data"
-  schema        = jsonencode({
-    "type": "object",
-    "properties": {
-      "file": { "type": "string", "format": "binary" }
-    }
-  })
 }
 
 # creating the api gateway resource for reports

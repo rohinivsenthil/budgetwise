@@ -9,7 +9,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import { categories } from '../../../constants';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import { createWorker } from 'tesseract.js';
 import './index.css';
+
 
 export default function CreateExpenseModal(props) {
 
@@ -20,9 +23,18 @@ export default function CreateExpenseModal(props) {
   const [expenseCategory, setExpenseCategory] = useState('');
   const [expenseAmount, setExpenseAmount] = useState('');
   const [fileName, setFileName] = useState('No file chosen');
+  const [loading, setLoading] = useState(false);
+
+  const reset = () => {
+    setExpenseName('')
+    setExpenseCategory('')
+    setExpenseAmount('')
+    setFileName('No file chosen')
+  }
 
   const handleSubmit = async () => {
     toggle();
+    reset();
   };
 
   const handleCreateExpense = async () => {
@@ -33,6 +45,7 @@ export default function CreateExpenseModal(props) {
     };
     method(createExpense)
     toggle();
+    reset();
   };
 
   function extractFilename(path) {
@@ -41,9 +54,27 @@ export default function CreateExpenseModal(props) {
     return parts[parts.length - 1];
   }
 
-  const handleFileName = (e) => {
+  const handleFileName = async (e) => {
+    setLoading(true)
+    // set file name
     const file = e.target.value;
     setFileName(extractFilename(file));
+    // read file data
+    const fileDoc = document.getElementById("actual-btn").files[0];
+    const worker = await createWorker('eng');
+    const ret = await worker.recognize(fileDoc);
+    const text = ret.data.text
+    await worker.terminate();
+    const regex = /(AMOUNT|Total)\s+(\d+\.\d+)/i;
+    const match = text.match(regex);
+    if (match && match[2]) {
+      setExpenseAmount(parseFloat(match[2]))
+    } else {
+      setExpenseAmount(0)
+    }
+    setLoading(false)
+    setExpenseName("Receipt");
+    setExpenseCategory("Other")
   };
 
   return (
@@ -96,6 +127,12 @@ export default function CreateExpenseModal(props) {
             <input className="fileInput" type="file" id="actual-btn" hidden onChange={(e) => handleFileName(e)}/>
             <label className="fileUploadLabel" for="actual-btn"><FileUploadIcon fontSize="small" style={{marginRight: ".3rem"}}/>UPLOAD RECEIPT INSTEAD</label>
             <div className="fileChosen">{fileName}</div>
+            { loading === true ?
+            <div className='loading'>
+                <HourglassBottomIcon fontSize='small' style={{marginRight: ".5rem"}}/>
+                Processing your receipt...
+            </div> : <div/>
+            }
         </DialogContent>
         <DialogActions>
             <Button onClick={handleSubmit} style={{color: '#465098', width: '15%', fontSize: 'small', fontWeight: 'bold'}}>Cancel</Button>

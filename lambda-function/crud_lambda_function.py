@@ -172,25 +172,23 @@ def generateResponse(statusCode, body):
 ###################
 
 
-def analyze_receipts(table, receipt_file):
+def analyze_receipts(data):
     try:
+        image_bytes = data["file"].encode('utf-8')
         # Call Amazon Textract to analyze the receipt file
-        response = textract.analyze_document(
-            Document={"Bytes": receipt_file.read()}, FeatureTypes=["FORMS"]
+        response = textract.analyze_expense(
+            Document={"Bytes": image_bytes}
         )
 
         # Extracting amount from Textract response
-        amount = None
-        for item in response["Blocks"]:
-            if item["BlockType"] == "LINE" and "Amount" in item["Text"]:
-                amount_text = item["Text"].replace("$", "").replace(",", "").strip()
-                amount = Decimal(amount_text)
-                break
+        # amount = None
+        # for item in response["Blocks"]:
+        #     if item["BlockType"] == "LINE" and "AMOUNT" in item["Text"]:
+        #         amount_text = item["Text"].replace("$", "").replace(",", "").strip()
+        #         amount = Decimal(amount_text)
+        #         break
 
-        if amount is not None:
-            return generateResponse(200, {"amount": amount})
-        else:
-            return generateResponse(404, "Amount not found in receipt")
+        return generateResponse(200, response)
 
     except Exception as e:
         print("Error:", e)
@@ -356,7 +354,7 @@ def lambda_handler(event, context):
                     response = deleteBudget(budgets_table, json.loads(event["body"]))
         elif path.startswith("/receipts"):
             if method == "POST":
-                response = analyze_receipts(expenses_table, event["body"])
+                response = analyze_receipts(event["body"])
         elif path.startswith("/reports"):
             if method == "POST":
                 response = createReport(expenses_table)
