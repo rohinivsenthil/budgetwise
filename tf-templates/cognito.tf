@@ -44,15 +44,10 @@ resource "aws_cognito_user_pool" "main" {
 }
 
 resource "aws_cognito_user_pool_client" "client" {
-  name                                 = "app_client"
-  user_pool_id                         = aws_cognito_user_pool.main.id
-  generate_secret                      = false
-  explicit_auth_flows                  = ["ADMIN_NO_SRP_AUTH"]
-  allowed_oauth_flows                  = ["code", "implicit"]
-  allowed_oauth_scopes                 = ["phone", "email", "openid", "profile"]
-  allowed_oauth_flows_user_pool_client = true
-  callback_urls                        = ["https://www.example.com/callback"]
-  logout_urls                          = ["https://www.example.com/logout"]
+  name                     = "app_client"
+  user_pool_id             = aws_cognito_user_pool.main.id
+  generate_secret          = false
+  explicit_auth_flows      = ["ADMIN_NO_SRP_AUTH"]
 }
 
 resource "aws_cognito_identity_pool" "main_identity_pool" {
@@ -66,32 +61,8 @@ resource "aws_cognito_identity_pool" "main_identity_pool" {
   }
 }
 
-resource "aws_iam_role" "authenticated_role" {
-  name = "Cognito_Default_Authenticated_Role"
-
-  assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
-    Statement = [{
-      Action    = "sts:AssumeRoleWithWebIdentity"
-      Effect    = "Allow"
-      Principal = {
-        Federated = "cognito-identity.amazonaws.com"
-      }
-      Condition = {
-        StringEquals = {
-          "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.main_identity_pool.id
-        },
-        "ForAnyValue:StringLike": {
-          "cognito-identity.amazonaws.com:amr" = "authenticated"
-        }
-      }
-    }]
-  })
-}
-
 resource "aws_cognito_identity_pool_roles_attachment" "main_identity_pool_role_attachment" {
   identity_pool_id = aws_cognito_identity_pool.main_identity_pool.id
-
   roles = {
     "authenticated" = aws_iam_role.authenticated_role.arn
   }
