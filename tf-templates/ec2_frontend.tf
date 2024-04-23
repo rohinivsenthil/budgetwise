@@ -1,7 +1,7 @@
 resource "aws_instance" "budgetwise_instance" {
   ami                    = "ami-09a6704a52d96773b"
   instance_type          = "t4g.nano"
-  key_name               = "aws_key_0123"
+  key_name               = "YOUR_KEY_NAME"
   vpc_security_group_ids = [aws_security_group.security_group_react.id]
 
   user_data = <<-EOF
